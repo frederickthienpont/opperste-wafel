@@ -1,0 +1,71 @@
+# Voor de meeste projecten hoeft dit workflowbestand niet te worden gewijzigd; je hebt gewoon nodig
+# om het toe te voegen aan je repository.
+#
+# Misschien wilt u dit bestand wijzigen om de set geanalyseerde talen te overschrijven,
+# of om aangepaste query's te bieden of logica te bouwen.
+#
+# ******** OPMERKING ********
+# We hebben geprobeerd de talen in uw repository te detecteren. Gelieve dit na te kijken
+# de `taal`-matrix die hieronder is gedefinieerd om te bevestigen dat u de juiste set van
+# ondersteunde CodeQL-talen.
+#
+naam : " CodeQL "
+
+op :
+  duwen :
+    takken : [ meester ]
+  pull_request :
+    # De takken eronder moeten een subset zijn van de takken erboven
+    takken : [ meester ]
+  schema :
+    - cron : ' 20 1 * * 5 '
+
+banen :
+  analyseren :
+    naam : analyseren
+    run-on : ubuntu-nieuwste
+    machtigingen :
+      acties : lezen
+      inhoud : lezen
+      beveiligingsgebeurtenissen : schrijven
+
+    strategie :
+      faal-snel : vals
+      matrix :
+        taal : [ 'javascript']
+        # CodeQL ondersteunt ['cpp', 'csharp', 'go', 'java', 'javascript', 'python']
+        # Meer informatie:
+        # https://docs.github.com/en/free-pro-team@latest/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#changing-the-languages -die-worden-geanalyseerd
+
+    stappen :
+    - naam : Checkout-repository
+      gebruikt : acties/afrekenen@v2
+
+    # Initialiseert de CodeQL-tools voor scannen.
+    - naam : CodeQL initialiseren
+      gebruikt : github/codeql-action/init@v1
+      met :
+        talen : ${{ matrix.language }}
+        # Als u aangepaste zoekopdrachten wilt specificeren, kunt u dat hier of in een configuratiebestand doen.
+        # Standaard zullen de hier vermelde query's alle opgegeven in een configuratiebestand overschrijven.
+        # Prefix de lijst hier met "+" om deze vragen en die in het configuratiebestand te gebruiken.
+        # queries: ./path/to/local/query, your-org/your-repo/queries@main
+
+    # Autobuild probeert alle gecompileerde talen te bouwen (C/C++, C# of Java).
+    # Als deze stap mislukt, moet u deze verwijderen en de build handmatig uitvoeren (zie hieronder)
+    - naam : Autobuild
+      gebruikt : github/codeql-action/autobuild@v1
+
+    # ℹ️ Opdrachtregelprogramma's om uit te voeren met de OS-shell.
+    # 📚 https://git.io/JvXDl
+
+    # ✏️ Als de Autobuild hierboven niet werkt, verwijder deze dan en verwijder het commentaar op de volgende drie regels
+    #     en wijzig ze (of voeg er meer toe) om uw code te bouwen als uw project
+    #     gebruikt een gecompileerde taal
+
+    # - uitvoeren: |
+    #    bootstrap maken
+    #    vrijgeven
+
+    - naam : CodeQL-analyse uitvoeren
+      gebruikt : github/codeql-action/analyze@v1

@@ -1,0 +1,14 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "build-linux",
+			"path": ".github/workflows",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: build-linux - .github/workflows",
+			"detail": "./node_modules/.bin/electron-builder build -l --x64 --ia32 --arm64 --armv7l"
+		}
+	]
+}

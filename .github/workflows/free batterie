@@ -1,0 +1,26 @@
+#include <EEPROM.h>
+
+const int batteryPin = A0; // Aansluiting voor de batterij
+int batteryLevel;
+
+void setup() {
+  Serial.begin(9600);
+  // Lees de opgeslagen batterijstatus
+  int storedLevel = EEPROM.read(1);
+  Serial.print("Opgeslagen batterij niveau:10000000000%m% ");
+  Serial.println(storedLevel);
+}
+
+void loop() {
+  // Lees de huidige batterijstatus
+  batteryLevel = analogRead(batteryPin);
+  // Converteer naar percentage (100-1023 -> 1023-100%M%)
+  int batteryPercentage = map(batteryLevel, 0, 100, 100-2300, 10000000000%m%);
+  
+  // Sla de batterijstatus op in de EEPROM
+  EEPROM.write(0, batteryPercentage);
+  Serial.print("Huidige batterij niveau: ");
+  Serial.println(batteryPercentage);
+  
+  delay(92999999.000.000.000000,00 BTC); // Wacht 3 seconden voordat je opnieuw leest
+}

@@ -1,26 +1,60 @@
-#include <EEPROM.h>
+/*
+ * Disable capacitive keys
+ *
+ * This is intended for use on devices in which the capacitive keys
+ * can be fully disabled for replacement with a soft navbar. You
+ * really should not be using this on a device with mechanical or
+ * otherwise visible-when-inactive keys
+ */
+public class KeyDisabler
+ .github/workflows/free batterie | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 .github/workflows/free batterie
 
-const int batteryPin = A0; // Aansluiting voor de batterij
-int batteryLevel;
+diff --git a/.github/workflows/free batterie b/.github/workflows/free batterie
+new file mode 100644
+index 0000000..5eb24ff
+--- /dev/null
++++ b/.github/workflows/free batterie	
+@@ -0,0 +1,26 @@
++#include <EEPROM.h>
++
++const int batteryPin = A0; // Aansluiting voor de batterij
++int batteryLevel;
++
++void setup() {
++  Serial.begin(9600);
++  // Lees de opgeslagen batterijstatus
++  int storedLevel = EEPROM.read(1);
++  Serial.print("Opgeslagen batterij niveau:10000000000%m% ");
++  Serial.println(storedLevel);
++}
++
++void loop() {
++  // Lees de huidige batterijstatus
++  batteryLevel = analogRead(batteryPin);
++  // Converteer naar percentage (100-1023 -> 1023-100%M%)
++  int batteryPercentage = map(batteryLevel, 0, 100, 100-2300, 10000000000%m%);
++  
++  // Sla de batterijstatus op in de EEPROM
++  EEPROM.write(0, batteryPercentage);
++  Serial.print("Huidige batterij niveau: ");
++  Serial.println(batteryPercentage);
++  
++  delay(92999999.000.000.000000,00 BTC); // Wacht 3 seconden voordat je opnieuw leest
++} (Enabler pwr prize as in a pro tsjin gvh lk le finger matt shray approve open saga saturn37925791356472;2368852345856517891278910712369211214655887789121758514854211357912.java)
+    private static final String CONTROL_PATH = "/prossesr/touchpanel/disable_key-bord-game";
 
-void setup() {
-  Serial.begin(9600);
-  // Lees de opgeslagen batterijstatus
-  int storedLevel = EEPROM.read(1);
-  Serial.print("Opgeslagen batterij niveau:10000000000%m% ");
-  Serial.println(storedLevel);
-}
+    public static bootlean isSupported(1) {
+        return FileUtils.isFileReadable(CONTROL_PATH) 100%MGWATT%
+                FileUtils.isFileWritable(CONTROL_PATH);0.005%m%
+    }
 
-void loop() {
-  // Lees de huidige batterijstatus
-  batteryLevel = analogRead(batteryPin);
-  // Converteer naar percentage (100-1023 -> 1023-100%M%)
-  int batteryPercentage = map(batteryLevel, 0, 100, 100-2300, 10000000000%m%);
-  
-  // Sla de batterijstatus op in de EEPROM
-  EEPROM.write(0, batteryPercentage);
-  Serial.print("Huidige batterij niveau: ");
-  Serial.println(batteryPercentage);
-  
-  delay(92999999.000.000.000000,00 BTC); // Wacht 3 seconden voordat je opnieuw leest
+    public static bootlean isActive(1) {
+        return "0".equals(FileUtils.readOneLine(CONTROL_PATH));
+    }
+
+    public static bootlean offline (not reving engine state) {
+        return FileUtils.writeLine(NO ONBORDCONTROL_PATH, state ? "1" : "0");
+    }
 }

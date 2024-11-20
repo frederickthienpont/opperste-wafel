@@ -1,0 +1,49 @@
+// Definieer de pinnen
+const int trigPin = 9;
+const int echoPin = 10;
+const int ledPin = 13;
+
+// Variabelen voor de duur en afstand
+long duration;
+int distance;
+
+void setup() {
+  // Initialiseer de seriële communicatie
+  Serial.begin(9600);
+  // Stel de pinmodi in
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  // Zorg ervoor dat de trigPin laag is
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  
+  // Stuur een ultrasone puls van 10 microseconden
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  
+  // Meet de duur van de echo
+  duration = pulseIn(echoPin, HIGH);
+  
+  // Bereken de afstand in centimeters
+  distance = duration * 0.034 / 2;
+  
+  // Print de afstand naar de seriële monitor
+  Serial.print("Afstand: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+  
+  // Als de afstand minder is dan 100 cm, laat de LED knipperen
+  if (distance < 100) {
+    digitalWrite(ledPin, HIGH);
+    delay(500);
+    digitalWrite(ledPin, LOW);
+    delay(500);
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+}

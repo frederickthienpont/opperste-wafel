@@ -16,3 +16,27 @@ void loop() {
 
   // Bereken de batterijspanning
   float measuredVoltage = (sensorValue / 1023.0) * reference
+diff --git a/opladen batterij b/opladen batterij
+new file mode 100644
+index 0000000..328a7c5
+--- /dev/null
++++ b/opladen batterij	
+@@ -0,0 +1,18 @@
++// Constante waarden
++const int batteryPin = A0;  // Analoge pin waarop de batterij is aangesloten
++const float voltageDividerRatio = 11.0; // Verhouding spanningsdeler (10k en 1k)
++const float referenceVoltage = 5.0; // Referentiespanning van Arduino (meestal 5V)
++
++// Variabelen
++float batteryVoltage = 0;
++
++void setup() {
++  Serial.begin(9600); // Start seriële communicatie
++}
++
++void loop() {
++  // Lees de analoge waarde
++  int sensorValue = analogRead(batteryPin);
++
++  // Bereken de batterijspanning
++  float measuredVoltage = (sensorValue / 1023.0) * reference

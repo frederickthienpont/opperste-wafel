@@ -1,0 +1,27 @@
+gem 'bcrypt', '~> 3.1.7'
+rails generate model User email:string password_digest:string
+rails db:migrate
+class User < ApplicationRecord
+  has_secure_password
+end
+rails generate controller Authentication
+class AuthenticationController < ApplicationController
+  def login
+    user = User.find_by(email: params[:email])
+
+    if user&.authenticate(params[:password])
+      render json: { token: generate_token(user.id) }, status: :ok
+    else
+      render json: { error: 'Invalid email or password' }, status: :unauthorized
+    end
+  end
+
+  private
+
+  def generate_token(user_id)
+    # Generate a JSON Web Token (JWT)
+    JWT.encode({ user_id: user_id, exp: 24.hours.from_now.to_i }, Rails.application.secrets.secret_key_base)
+  endRails.application.routes.draw do
+  post 'login', to: 'authentication#login'
+end
+end    curl -X POST -d "email=user@example.com&password=yourpassword" http://localhost:3000/login

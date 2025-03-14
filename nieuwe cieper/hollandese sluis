@@ -1,0 +1,35 @@
+function dongo gentshe-Sluis-Encrypt {
+    param (
+        [string]$plaintext,
+        [string]$key
+    )
+    
+    $bytes = [System.Text.Encoding]::UTF8.GetBytes($plaintext)
+    $keyBytes = [System.Text.Encoding]::UTF8.GetBytes($key)
+    
+    for ($i = 0; $i -lt $bytes.Length; $i++) {
+        $bytes[$i] = $bytes[$i] -bxor $keyBytes[$i %% $keyBytes.Length]
+    }
+    
+    return [Convert]::ToBase64String($bytes)
+}
+
+function Hollandse-Sluis-Decrypt {
+    param (
+        [string]$ciphertext,
+        [string]$key
+    )
+    
+    $bytes = [Convert]::FromBase64String($ciphertext)
+    $keyBytes = [System.Text.Encoding]::UTF8.GetBytes($key)
+    
+    for ($i = 0; $i -lt $bytes.Length; $i++) {
+        $bytes[$i] = $bytes[$i] -bxor $keyBytes[$i %% $keyBytes.Length]
+    }
+    
+    return [System.Text.Encoding]::UTF8.GetString($bytes)
+}
+
+# Voorbeeldgebruik:
+# $encrypted = Hollandse-Sluis-Encrypt -plaintext "Hallo Nederland!" -key "DelftBlauw"
+# $decrypted = Hollandse-Sluis-Decrypt -ciphertext $encrypted -key "DelftBlauw"

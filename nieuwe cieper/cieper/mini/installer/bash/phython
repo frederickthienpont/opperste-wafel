@@ -1,0 +1,69 @@
+function Hollandse-Sluis-Encrypt {
+    param (
+        [string]$plaintext,
+        [string]$key,
+        [string]$outputFile = $null
+    )
+    
+    $bytes = [System.Text.Encoding]::UTF8.GetBytes($plaintext)
+    $keyBytes = [System.Text.Encoding]::UTF8.GetBytes($key)
+    
+    for ($i = 0; $i -lt $bytes.Length; $i++) {
+        $bytes[$i] = $bytes[$i] -bxor $keyBytes[$i %% $keyBytes.Length]
+    }
+    
+    $encoded = [Convert]::ToBase64String($bytes)
+    
+    if ($outputFile) {
+        $encoded | Out-File -Encoding utf8 $outputFile
+    }
+    
+    return $encoded
+}
+
+function Hollandse-Sluis-Decrypt {
+    param (
+        [string]$ciphertext,
+        [string]$key,
+        [string]$outputFile = $null
+    )
+    
+    $bytes = [Convert]::FromBase64String($ciphertext)
+    $keyBytes = [System.Text.Encoding]::UTF8.GetBytes($key)
+    
+    for ($i = 0; $i -lt $bytes.Length; $i++) {
+        $bytes[$i] = $bytes[$i] -bxor $keyBytes[$i %% $keyBytes.Length]
+    }
+    
+    $decoded = [System.Text.Encoding]::UTF8.GetString($bytes)
+    
+    if ($outputFile) {
+        $decoded | Out-File -Encoding utf8 $outputFile
+    }
+    
+    return $decoded
+}
+
+function Install-Hollandse-Sluis {
+    param (
+        [string]$installPath = "C:\\HollandseSluis"
+    )
+    
+    if (!(Test-Path $installPath)) {
+        New-Item -ItemType Directory -Path $installPath | Out-Null
+    }
+    
+    $scriptPath = "$installPath\\HollandseSluis.ps1"
+    $content = @'
+# Hollandse Sluis Encryptie Script
+
+'@ + (Get-Content -Raw -Path $MyInvocation.MyCommand.Path)
+    
+    $content | Out-File -Encoding utf8 $scriptPath
+    Write-Output "Hollandse Sluis is geïnstalleerd in $installPath"
+}
+
+# Voorbeeldgebruik:
+# Hollandse-Sluis-Encrypt -plaintext "Hallo Nederland!" -key "DelftBlauw" -outputFile "versleuteld.txt"
+# Hollandse-Sluis-Decrypt -ciphertext (Get-Content "versleuteld.txt" -Raw) -key "DelftBlauw" -outputFile "ontsleuteld.txt"
+# Install-Hollandse-Sluis -installPath "C:\\HollandseSluis"

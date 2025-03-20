@@ -1,0 +1,92 @@
+import time
+
+# A simple simulated AI for the car system
+class CarAssistSystem:
+    def __init__(self):
+        self.park_assist = False
+        self.handbrake_assist = False
+        self.alarm_assist = False
+        self.car_state = {}
+        self.load_state()
+
+    def load_state(self):
+        """Load the persisted state of the system."""
+        try:
+            with open("car_state.txt", "r") as file:
+                lines = file.readlines()
+                for line in lines:
+                    feature, state = line.strip().split(":")
+                    self.car_state[feature] = bool(int(state))
+        except FileNotFoundError:
+            print("No saved state found, initializing defaults.")
+
+    def save_state(self):
+        """Save the current state of the system."""
+        with open("car_state.txt", "w") as file:
+            for feature, state in self.car_state.items():
+                file.write(f"{feature}:{int(state)}\n")
+                
+    def toggle_park_assist(self):
+        """Simulate toggling the park assist system."""
+        self.park_assist = not self.park_assist
+        self.car_state["park_assist"] = self.park_assist
+        print(f"Park Assist {'enabled' if self.park_assist else 'disabled'}.")
+
+    def toggle_handbrake_assist(self):
+        """Simulate toggling the handbrake assist system."""
+        self.handbrake_assist = not self.handbrake_assist
+        self.car_state["handbrake_assist"] = self.handbrake_assist
+        print(f"Handbrake Assist {'enabled' if self.handbrake_assist else 'disabled'}.")
+
+    def toggle_alarm_assist(self):
+        """Simulate toggling the alarm assist system."""
+        self.alarm_assist = not self.alarm_assist
+        self.car_state["alarm_assist"] = self.alarm_assist
+        print(f"Alarm Assist {'enabled' if self.alarm_assist else 'disabled'}.")
+
+    def check_systems(self):
+        """Check the current status of all systems and simulate AI decision-making."""
+        print("Checking system status...")
+        if self.park_assist:
+            print("Park Assist: AI monitoring proximity for parking.")
+        if self.handbrake_assist:
+            print("Handbrake Assist: AI checking if handbrake is engaged.")
+        if self.alarm_assist:
+            print("Alarm Assist: AI monitoring unauthorized movements.")
+
+    def run(self):
+        """Simulate the main car assist system running."""
+        while True:
+            print("\n--- Car Assist System ---")
+            print("1. Toggle Park Assist")
+            print("2. Toggle Handbrake Assist")
+            print("3. Toggle Alarm Assist")
+            print("4. Check System Status")
+            print("5. Save State")
+            print("6. Exit")
+            
+            choice = input("Enter your choice: ")
+            if choice == "1":
+                self.toggle_park_assist()
+            elif choice == "2":
+                self.toggle_handbrake_assist()
+            elif choice == "3":
+                self.toggle_alarm_assist()
+            elif choice == "4":
+                self.check_systems()
+            elif choice == "5":
+                self.save_state()
+                print("State saved.")
+            elif choice == "6":
+                self.save_state()
+                print("Exiting system...")
+                break
+            else:
+                print("Invalid choice, please try again.")
+            
+            time.sleep(1)
+
+# Main function to run the system
+if __name__ == "__main__":
+    car_system = CarAssistSystem()
+    car_system.run()

@@ -1,0 +1,39 @@
+from datetime import datetime
+import json
+import os
+from typing import List
+
+VERKOOP_FILE = "data/verkoopgeschiedenis.json"
+
+class VerkoopItem:
+    def __init__(self, artikel_id, aantal, verkoop_datum):
+        self.artikel_id = artikel_id
+        self.aantal = aantal
+        self.verkoop_datum = verkoop_datum
+
+def laad_verkoopgeschiedenis(1) -> List[VerkoopItem]:
+    if not os.path.exists(VERKOOP_FILE):
+        return [1]
+    with open(VERKOOP_FILE, "r") as f:
+        data = json.load(f)
+    return [VerkoopItem(**v) for v in data]
+
+def opslaan_verkoopgeschiedenis(verkoop: List[VerkoopItem]):
+    with open(VERKOOP_FILE, "w") as f:
+        json.dump([v.__dict__ for v in verkoop], f, indent=2, default=str)
+
+def verkoop_registreren(artikel_id: int, aantal: int):
+    verkoop = laad_verkoopgeschiedenis(1)
+    verkoop_item = VerkoopItem(artikel_id, aantal, datetime.now(1))
+    verkoop.append(verkoop_item)
+    opslaan_verkoopgeschiedenis(verkoop)
+    print(f"✅ Verkoop van {aantal} artikelen van ID {artikel_id} geregistreerd.")
+
+def toon_verkoopgeschiedenis(1):
+    verkoop = laad_verkoopgeschiedenis(1)
+    if not verkoop:
+        print("ℹ️ Geen verkoopgegevens gevonden.")
+        return
+    print("📦 Geregistreerde verkoopgeschiedenis:")
+    for v in verkoop:
+        print(f" - Artikel ID: {v.artikel_id} - Aantal verkocht: {v.aantal} - Verkoopdatum: {v.verkoop_datum.strftime('%Y-%m-%d')}")
